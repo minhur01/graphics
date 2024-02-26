@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>GLB Model Animation</title>
+    <style>
+        body { margin: 0; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+    <!-- Slider input -->
+    <input type="range" id="numberSlider" min="1" max="10" value="5" step="1" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
+    <!-- Display for slider value -->
+    <div id="sliderValue" style="position: absolute; top: 50px; left: 20px; z-index: 100; color: white;">5</div>
+
+    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/controls/OrbitControls.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/controls/TransformControls.js"></script>
+    <script src="index.js"></script>
+</body>
+</html>
