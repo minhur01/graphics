@@ -7,6 +7,35 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 
+// Create a large plane
+const geometry = new THREE.SphereGeometry(50, 20, 20);
+const material = new THREE.MeshBasicMaterial();
+
+// You can use Canvas to create a gradient texture
+const canvas = document.createElement('canvas');
+canvas.width = 2; // Width can be minimal, as we're just defining colors
+canvas.height = 2; // Height 2 to define a top and bottom color
+
+const ctx = canvas.getContext('2d');
+// Create gradient (replace colors as needed for your split)
+const gradient = ctx.createLinearGradient(0, 0, 0, 2);
+gradient.addColorStop(0, 'red'); // Top color
+gradient.addColorStop(1, 'blue'); // Bottom color
+
+ctx.fillStyle = gradient;
+ctx.fillRect(0, 0, 2, 2);
+
+// Use canvas as texture
+const texture = new THREE.CanvasTexture(canvas);
+material.map = texture;
+material.side = THREE.DoubleSide; // Ensure the inside of the sphere is also textured
+
+const sphere = new THREE.Mesh(geometry, material);
+sphere.position.x = 100; 
+sphere.position.y = 200; 
+sphere.position.z = -500; // Position the sphere in the scene
+scene.add(sphere);
+
 
 
 // OrbitControls for camera interaction
