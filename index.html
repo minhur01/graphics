@@ -9,8 +9,27 @@
 </head>
 <body>
     <!-- Arm Rotator Sliders -->
-    <input type="range" id="armLeftSlider" min="1" max="30" value="5" style="position: absolute; top: 20px; left: 20px; z-index: 100;">
-    <input type="range" id="armRightSlider" min="1" max="30" value="5" style="position: absolute; top: 40px; left: 20px; z-index: 100;">
+    <input type="range" id="armLeftSliderY" min="1" max="30" value="5" style="position: absolute; top: 20px; left: 90px; z-index: 100;">
+    <input type="range" id="armLeftSliderZ" min="1" max="30" value="15" style="position: absolute; top: 20px; left: 230px; z-index: 100;">
+    <input type="range" id="armRightSliderY" min="1" max="30" value="5" style="position: absolute; top: 40px; left: 90px; z-index: 100;">
+    <input type="range" id="armRightSliderZ" min="1" max="30" value="15" style="position: absolute; top: 40px; left: 230px; z-index: 100;">
+    <label for="armLeftSliderZ" style="position: absolute; top: 20px; left: 10px; z-index: 100;">Left Arm:</label>
+    <label for="armRightSliderZ" style="position: absolute; top: 40px; left: 10px; z-index: 100;">Right Arm:</label>
+
+    <!-- Leg Rotator Sliders -->
+    <input type="range" id="legLeftSliderX" min="1" max="30" value="9" style="position: absolute; top: 60px; left: 90px; z-index: 100;">
+    <input type="range" id="legLeftSliderZ" min="1" max="30" value="22" style="position: absolute; top: 60px; left: 230px; z-index: 100;">
+    <input type="range" id="legRightSliderX" min="1" max="30" value="9" style="position: absolute; top: 80px; left: 90px; z-index: 100;">
+    <input type="range" id="legRightSliderZ" min="1" max="30" value="22" style="position: absolute; top: 80px; left: 230px; z-index: 100;">
+    
+    <input type="range" id="legLeftSliderLowerX" min="1" max="30" value="9" style="position: absolute; top: 60px; left: 370px; z-index: 100;">
+    <input type="range" id="legLeftSliderLowerZ" min="1" max="30" value="16" style="position: absolute; top: 60px; left: 510px; z-index: 100;">
+    <input type="range" id="legRightSliderLowerX" min="1" max="30" value="9" style="position: absolute; top: 80px; left: 370px; z-index: 100;">
+    <input type="range" id="legRightSliderLowerZ" min="1" max="30" value="16" style="position: absolute; top: 80px; left: 510px; z-index: 100;">
+    <label for="armLeftSliderZ" style="position: absolute; top: 60px; left: 10px; z-index: 100;">Left Leg:</label>
+    <label for="armRightSliderZ" style="position: absolute; top: 80px; left: 10px; z-index: 100;">Right Leg:</label>
+    <label style="position: absolute; top: 0px; left: 205px; z-index: 100;">Upper:</label>
+    <label style="position: absolute; top: 0px; left: 480px; z-index: 100;">Lower:</label>
 
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/build/three.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.140.0/examples/js/loaders/GLTFLoader.js"></script>

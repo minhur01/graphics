@@ -12,6 +12,10 @@ controls.enableDamping = true; // An optional feature that adds inertia to camer
 controls.dampingFactor = 0.25;
 controls.enableZoom = true;
 
+// Set the point to zoom into
+controls.target.set(0, 1.25, 0);
+controls.update();
+
 // Lighting
 const ambientLight = new THREE.AmbientLight(0x404040); // Soft white light
 scene.add(ambientLight);
@@ -32,7 +36,7 @@ loader.load('./assets/toothless_rigged_fk.glb', function(gltf) {
 
     model.traverse((object) => {
         if (object.isBone) {
-            //console.log(object); // Log the name of the bone
+            console.log(object); // Log the name of the bone
         }
     });
 
@@ -63,31 +67,115 @@ window.addEventListener('resize', function() {
     controls.update();
 });
 
-// Slider event listener and bone rotation
-document.getElementById('armLeftSlider').addEventListener('input', function() {
-    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
-    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
-
-    rotateBone('arm_upper_L', -rotationAngle);
-});
-document.getElementById('armRightSlider').addEventListener('input', function() {
-    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
-    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
-
-    rotateBone('arm_upper_R', rotationAngle);
-});
-
 // Function to map the slider value to a rotation angle
 function mapSliderValueToAngle(value, minAngle, maxAngle) {
     return minAngle + (value - 1) * (maxAngle - minAngle) / 29; // Slider values are 1 to 30
 }
 
+
+// Slider event listener and bone rotation
+
+// ARM SLIDERS
+
+document.getElementById('armLeftSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('arm_upper_L', -rotationAngle, 'z');
+});
+document.getElementById('armRightSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('arm_upper_R', rotationAngle, 'z');
+});
+
+document.getElementById('armLeftSliderY').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('arm_upper_L', -rotationAngle, 'y');
+});
+document.getElementById('armRightSliderY').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('arm_upper_R', rotationAngle, 'y');
+});
+
+
+// LEG SLIDERS
+
+document.getElementById('legLeftSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('leg_upper_L', -rotationAngle, 'z');
+});
+document.getElementById('legRightSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('leg_upper_R', rotationAngle, 'z');
+});
+
+document.getElementById('legLeftSliderX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_upper_L', -rotationAngle, 'x');
+});
+document.getElementById('legRightSliderX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_upper_R', -rotationAngle, 'x');
+});
+
+document.getElementById('legLeftSliderLowerZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_lower_L', -rotationAngle, 'z');
+});
+document.getElementById('legRightSliderLowerZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_lower_R', rotationAngle, 'z');
+});
+
+document.getElementById('legLeftSliderLowerX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_lower_L', -rotationAngle, 'x');
+});
+document.getElementById('legRightSliderLowerX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('leg_lower_R', -rotationAngle, 'x');
+});
+
+
+
 // Function to rotate a specified bone
-function rotateBone(boneName, angle) {
+function rotateBone(boneName, angle, axis) {
     scene.traverse((object) => {
         if (object.isBone && object.name === boneName) {
             // Adjust rotation as needed; here it's the Y-axis
-            object.rotation.z = angle;
+            if (axis == 'z') {
+                object.rotation.z = angle;
+            }
+            else if (axis == 'y') {
+                object.rotation.y = angle;
+            }
+            else {
+                object.rotation.x = angle;
+            }
         }
     });
 }
+
+
