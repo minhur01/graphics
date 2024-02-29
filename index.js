@@ -30,13 +30,27 @@ const loader = new THREE.GLTFLoader();
 let mixer; // Declare the mixer globally
 const clock = new THREE.Clock(); // Clock to handle animation timing
 
+// Joint Angles Dict setup
+var prevJointAngles = {};
+var newJointAngles = {};
+var jointPoses = {}
+
+var animationTimes = [];
+
+var bonesDict = {};
+
+
 loader.load('./assets/toothless_rigged_fk.glb', function(gltf) {
     const model = gltf.scene;
     scene.add(model);
 
     model.traverse((object) => {
         if (object.isBone) {
-            console.log(object); // Log the name of the bone
+            //console.log(object); // Log the name of the bone
+            prevJointAngles[object.name] = object.quaternion;
+            jointPoses[object.name] = [];
+            bonesDict[object.name] = object;
+
         }
     });
 
@@ -54,6 +68,10 @@ function animate() {
    
     const delta = clock.getDelta(); // Get the time elapsed since the last frame
     mixer.update(delta); // Update the mixer to progress the animation
+
+    if (mixer) {
+        mixer.update(delta);
+    };
    
     controls.update(); // only required if controls.enableDamping = true, or if controls.autoRotate = true
     renderer.render(scene, camera);
@@ -71,6 +89,94 @@ window.addEventListener('resize', function() {
 function mapSliderValueToAngle(value, minAngle, maxAngle) {
     return minAngle + (value - 1) * (maxAngle - minAngle) / 29; // Slider values are 1 to 30
 }
+
+// Quaternion keyframes 
+var quaternionKeyframes = {}
+
+
+console.log(quaternionKeyframes);
+
+
+
+// Create a keyframe track for a bone
+function createQuaternionKeyframeTrack(boneName, keyframes) {
+
+    console.log(keyframes);
+
+    const times = keyframes.times;
+    const values = [];
+    console.log("YUH");
+    keyframes.quaternions.forEach(quat => {
+        values.push(quat.x, quat.y, quat.z, quat.w);
+    });
+    return new THREE.QuaternionKeyframeTrack(`${boneName}.quaternion`, times, values);
+}
+
+// Create and play the animation
+function playAnimation() {
+    var tracks = [];
+
+    scene.traverse((object) => {
+        if (object.isBone) {
+
+            quaternionKeyframes[object.name] = {
+                times: animationTimes,
+                quaternions: jointPoses[object.name]
+            }
+
+            var track = createQuaternionKeyframeTrack(object.name, quaternionKeyframes[object.name]);
+            tracks.push(track);
+
+        }
+    });
+
+    console.log("WHY");
+
+    const clip = new THREE.AnimationClip('QuaternionAnimation', -1, tracks);
+    const action = mixer.clipAction(clip);
+    action.reset();
+    action.play();
+}
+
+// Button to play animation
+document.getElementById('playAnimation').addEventListener('click', function() {
+
+    scene.traverse((object) => {
+        if (object.isBone) {
+
+            jointPoses[object.name].push(jointPoses[object.name][0]);
+
+        }
+    });
+
+    animationTimes.push(animationTimes.length + 1);
+
+
+
+    playAnimation();
+});
+
+// Button to add poses to the animation
+document.getElementById('addPose').addEventListener('click', function() {
+
+    scene.traverse((object) => {
+        if (object.isBone) {
+
+            prevJointAngles[object.name] = newJointAngles[object.name];
+
+            var currQuaternion = new THREE.Quaternion(object.quaternion.x, object.quaternion.y, object.quaternion.z, object.quaternion.w);
+
+            jointPoses[object.name].push(currQuaternion);
+
+
+        }
+    });
+
+    animationTimes.push(animationTimes.length + 1);
+    //console.log(jointPoses);
+
+
+});
 
 
 // Slider event listener and bone rotation
@@ -174,6 +280,8 @@ function rotateBone(boneName, angle, axis) {
             else {
                 object.rotation.x = angle;
             }
+            newJointAngles[object.name] = object.quaternion;
+            //console.log(newJointAngles[object.name]);
         }
     });
 }
