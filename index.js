@@ -40,13 +40,14 @@ var animationTimes = [];
 var bonesDict = {};
 
 
+
 loader.load('./assets/toothless_rigged_fk.glb', function(gltf) {
     const model = gltf.scene;
     scene.add(model);
 
     model.traverse((object) => {
         if (object.isBone) {
-            //console.log(object); // Log the name of the bone
+            console.log(object); // Log the name of the bone
             prevJointAngles[object.name] = object.quaternion;
             jointPoses[object.name] = [];
             bonesDict[object.name] = object;
@@ -87,25 +88,20 @@ window.addEventListener('resize', function() {
 
 // Function to map the slider value to a rotation angle
 function mapSliderValueToAngle(value, minAngle, maxAngle) {
-    return minAngle + (value - 1) * (maxAngle - minAngle) / 29; // Slider values are 1 to 30
+    return minAngle + (value - 1) * (maxAngle - minAngle) / 30; // Slider values are 0 to 30
 }
 
 // Quaternion keyframes 
 var quaternionKeyframes = {}
 
-
-console.log(quaternionKeyframes);
-
-
-
 // Create a keyframe track for a bone
 function createQuaternionKeyframeTrack(boneName, keyframes) {
 
-    console.log(keyframes);
+    //console.log(keyframes);
 
     const times = keyframes.times;
     const values = [];
-    console.log("YUH");
+    
     keyframes.quaternions.forEach(quat => {
         values.push(quat.x, quat.y, quat.z, quat.w);
     });
@@ -129,8 +125,6 @@ function playAnimation() {
 
         }
     });
-
-    console.log("WHY");
 
     const clip = new THREE.AnimationClip('QuaternionAnimation', -1, tracks);
     const action = mixer.clipAction(clip);
@@ -210,6 +204,33 @@ document.getElementById('armRightSliderY').addEventListener('input', function() 
 });
 
 
+document.getElementById('armLeftSliderLowerZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('arm_lower_L', -rotationAngle, 'z');
+});
+document.getElementById('armRightSliderLowerZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('arm_lower_R', rotationAngle, 'z');
+});
+
+document.getElementById('armLeftSliderLowerX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('arm_lower_L', rotationAngle, 'x');
+});
+document.getElementById('armRightSliderLowerX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('arm_lower_R', rotationAngle, 'x');
+});
+
+
 // LEG SLIDERS
 
 document.getElementById('legLeftSliderZ').addEventListener('input', function() {
@@ -265,6 +286,96 @@ document.getElementById('legRightSliderLowerX').addEventListener('input', functi
 });
 
 
+// TAIL SLIDERS
+
+document.getElementById('tailSliderUpperZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('tail_first_half', -rotationAngle, 'z');
+});
+
+document.getElementById('tailSliderUpperX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI); // Map the slider value to an angle
+
+    rotateBone('tail_first_half', -rotationAngle, 'x');
+});
+
+document.getElementById('tailSliderLowerX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/4; // Map the slider value to an angle
+
+    rotateBone('tail_second_falf', -rotationAngle, 'x');
+});
+
+document.getElementById('tailSliderLowerZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('tail_second_falf', -rotationAngle, 'z');
+});
+
+
+// HEAD SLIDERS
+
+document.getElementById('headSliderX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('head', -rotationAngle, 'x');
+});
+
+document.getElementById('headSliderY').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('head', -rotationAngle, 'y');
+});
+
+document.getElementById('headSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('head', -rotationAngle, 'z');
+});
+
+
+// NECK SLIDERS
+
+document.getElementById('neckSliderX').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('neck', -rotationAngle, 'x');
+});
+
+document.getElementById('neckSliderY').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('neck', -rotationAngle, 'y');
+});
+
+document.getElementById('neckSliderZ').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert slider value to an integer
+    const rotationAngle = mapSliderValueToAngle(sliderValue, 0, Math.PI) - Math.PI/2; // Map the slider value to an angle
+
+    rotateBone('neck', -rotationAngle, 'z');
+});
+
+
+// Model rotation
+
+document.getElementById('modelRotationSlider').addEventListener('input', function() {
+    const sliderValue = parseInt(this.value, 10); // Convert the slider value to an integer
+    const rotationRadians = THREE.MathUtils.degToRad(sliderValue); // Convert degrees to radians
+
+    rotateBone('root', rotationRadians, 'y');
+});
+
+
+
 
 // Function to rotate a specified bone
 function rotateBone(boneName, angle, axis) {
@@ -285,5 +396,6 @@ function rotateBone(boneName, angle, axis) {
         }
     });
 }
+
 
 
