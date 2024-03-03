@@ -1,6 +1,22 @@
 // Scene setup
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x87CEEB); // Light blue background
+scene.background = new THREE.Color(0x87CEEB); // Light blue background 
+
+// Create a texture loader
+const backgroundloader = new THREE.TextureLoader();
+backgroundloader.load(
+    './assets/image.jpeg', // Path to background image
+    function(texture) {
+        // On load, set the texture as the scene background
+        scene.background = texture;
+    },
+    undefined,
+    function(err) {
+        console.error('An error happened loading the background image.');
+    }
+);
+
+
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth, window.innerHeight);
@@ -8,7 +24,7 @@ document.body.appendChild(renderer.domElement);
 
 
 // Create a large plane
-const geometry = new THREE.SphereGeometry(50, 20, 20);
+const geometry = new THREE.SphereGeometry(200, 20, 20);
 const material = new THREE.MeshBasicMaterial();
 
 // You can use Canvas to create a gradient texture
@@ -70,9 +86,11 @@ const clock = new THREE.Clock(); // Clock to handle animation timing
 
 
 
+
 loader.load('./assets/toothless_rigged_fk.glb', function(gltf) {
     const model = gltf.scene;
     scene.add(model);
+
 
 
 
